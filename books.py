@@ -5,40 +5,60 @@ import sqlite3
 import os
 from qr_module import generate_qr
 from PIL import ImageTk, Image
+import config
 
 def add_book_ui():
     win = tk.Toplevel()
     win.title("Add New Book")
-    win.geometry("400x300")
+    win.geometry("450x350")
     win.resizable(False, False)
     win.grab_set()  # Make window modal
+    win.configure(bg=config.WINDOW_THEME['background_color'])
     
     # Center the window
     win.eval('tk::PlaceWindow . center')
     
     # Main frame
-    main_frame = tk.Frame(win, padx=20, pady=20)
+    main_frame = tk.Frame(win, padx=20, pady=20, bg=config.WINDOW_THEME['background_color'])
     main_frame.pack(fill="both", expand=True)
     
     # Title
-    tk.Label(main_frame, text="Add New Book", font=("Arial", 14, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 20))
+    tk.Label(main_frame, text="Add New Book", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_LARGE, "bold"),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, columnspan=2, pady=(0, 20))
     
-    # Form fields
-    tk.Label(main_frame, text="Title *:", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=5)
-    title_entry = tk.Entry(main_frame, font=("Arial", 10), width=25)
-    title_entry.grid(row=1, column=1, pady=5)
+    # Form fields with improved theming
+    tk.Label(main_frame, text="Title *:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=8)
+    title_entry = tk.Entry(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=25,
+                          bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
+    title_entry.grid(row=1, column=1, pady=8, padx=5)
     title_entry.focus()
     
-    tk.Label(main_frame, text="Author:", font=("Arial", 10)).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=5)
-    author_entry = tk.Entry(main_frame, font=("Arial", 10), width=25)
-    author_entry.grid(row=2, column=1, pady=5)
+    tk.Label(main_frame, text="Author:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=8)
+    author_entry = tk.Entry(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=25,
+                           bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
+    author_entry.grid(row=2, column=1, pady=8, padx=5)
     
-    tk.Label(main_frame, text="ISBN:", font=("Arial", 10)).grid(row=3, column=0, sticky="e", padx=(0, 10), pady=5)
-    isbn_entry = tk.Entry(main_frame, font=("Arial", 10), width=25)
-    isbn_entry.grid(row=3, column=1, pady=5)
+    tk.Label(main_frame, text="ISBN:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=3, column=0, sticky="e", padx=(0, 10), pady=8)
+    isbn_entry = tk.Entry(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=25,
+                         bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
+    isbn_entry.grid(row=3, column=1, pady=8, padx=5)
     
     # Required field note
-    tk.Label(main_frame, text="* Required field", font=("Arial", 8), fg="red").grid(row=4, column=0, columnspan=2, pady=5)
+    tk.Label(main_frame, text="* Required field", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_SMALL), 
+             fg=config.WINDOW_THEME['danger_color'],
+             bg=config.WINDOW_THEME['background_color']).grid(row=4, column=0, columnspan=2, pady=8)
 
     def save_book():
         title = title_entry.get().strip()

@@ -3,35 +3,52 @@ import tkinter as tk
 from tkinter import messagebox, ttk
 import sqlite3
 from datetime import datetime
+import config
 
 def borrow_ui():
     win = tk.Toplevel()
     win.title("Borrow Book")
-    win.geometry("450x350")
+    win.geometry("500x400")
     win.resizable(False, False)
     win.grab_set()
+    win.configure(bg=config.WINDOW_THEME['background_color'])
     
     # Center the window
     win.eval('tk::PlaceWindow . center')
     
     # Main frame
-    main_frame = tk.Frame(win, padx=20, pady=20)
+    main_frame = tk.Frame(win, padx=20, pady=20, bg=config.WINDOW_THEME['background_color'])
     main_frame.pack(fill="both", expand=True)
     
     # Title
-    tk.Label(main_frame, text="Borrow Book", font=("Arial", 14, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 20))
+    tk.Label(main_frame, text="Borrow Book", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_LARGE, "bold"),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, columnspan=2, pady=(0, 20))
     
-    # Form fields
-    tk.Label(main_frame, text="Student Name *:", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=5)
-    sname = tk.Entry(main_frame, font=("Arial", 10), width=25)
-    sname.grid(row=1, column=1, pady=5)
+    # Form fields with improved theming
+    tk.Label(main_frame, text="Student Name *:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=8)
+    sname = tk.Entry(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=25,
+                    bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
+    sname.grid(row=1, column=1, pady=8, padx=5)
     sname.focus()
     
-    tk.Label(main_frame, text="Book Title *:", font=("Arial", 10)).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=5)
+    tk.Label(main_frame, text="Book Title *:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=8)
+    
+    # Configure ttk style for better visibility
+    style = ttk.Style()
+    style.configure('Themed.TCombobox', fieldbackground='white', foreground='black')
     
     # Use Combobox for book selection
-    btitle = ttk.Combobox(main_frame, font=("Arial", 10), width=23, state="readonly")
-    btitle.grid(row=2, column=1, pady=5)
+    btitle = ttk.Combobox(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
+                         width=23, state="readonly", style='Themed.TCombobox')
+    btitle.grid(row=2, column=1, pady=8, padx=5)
     
     # Load available books
     def load_available_books():
@@ -126,31 +143,47 @@ def borrow_ui():
 def return_ui():
     win = tk.Toplevel()
     win.title("Return Book")
-    win.geometry("450x350")
+    win.geometry("500x400")
     win.resizable(False, False)
     win.grab_set()
+    win.configure(bg=config.WINDOW_THEME['background_color'])
     
     # Center the window
     win.eval('tk::PlaceWindow . center')
     
     # Main frame
-    main_frame = tk.Frame(win, padx=20, pady=20)
+    main_frame = tk.Frame(win, padx=20, pady=20, bg=config.WINDOW_THEME['background_color'])
     main_frame.pack(fill="both", expand=True)
     
     # Title
-    tk.Label(main_frame, text="Return Book", font=("Arial", 14, "bold")).grid(row=0, column=0, columnspan=2, pady=(0, 20))
+    tk.Label(main_frame, text="Return Book", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_LARGE, "bold"),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, columnspan=2, pady=(0, 20))
     
-    # Form fields
-    tk.Label(main_frame, text="Student Name *:", font=("Arial", 10)).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=5)
-    sname = tk.Entry(main_frame, font=("Arial", 10), width=25)
-    sname.grid(row=1, column=1, pady=5)
+    # Form fields with improved theming
+    tk.Label(main_frame, text="Student Name *:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=8)
+    sname = tk.Entry(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=25,
+                    bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
+    sname.grid(row=1, column=1, pady=8, padx=5)
     sname.focus()
     
-    tk.Label(main_frame, text="Book Title *:", font=("Arial", 10)).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=5)
+    tk.Label(main_frame, text="Book Title *:", 
+             font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL),
+             bg=config.WINDOW_THEME['background_color'], 
+             fg=config.WINDOW_THEME['text_color']).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=8)
+    
+    # Configure ttk style for better visibility
+    style = ttk.Style()
+    style.configure('Themed.TCombobox', fieldbackground='white', foreground='black')
     
     # Use Combobox for borrowed book selection
-    btitle = ttk.Combobox(main_frame, font=("Arial", 10), width=23, state="readonly")
-    btitle.grid(row=2, column=1, pady=5)
+    btitle = ttk.Combobox(main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
+                         width=23, state="readonly", style='Themed.TCombobox')
+    btitle.grid(row=2, column=1, pady=8, padx=5)
     
     # Load borrowed books for the student
     def load_borrowed_books():
