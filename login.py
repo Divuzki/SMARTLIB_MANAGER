@@ -38,7 +38,7 @@ def show_login(callback):
     # Create root window for login
     login_window = tk.Tk()
     login_window.title("SMARTLIB MANAGER - Login")
-    login_window.geometry("400x300")
+    login_window.geometry("450x400")
     login_window.resizable(False, False)
     login_window.configure(bg=config.WINDOW_THEME['background_color'])
     
@@ -61,18 +61,18 @@ def show_login(callback):
     login_main_frame = tk.Frame(login_frame, padx=20, pady=20, bg=config.WINDOW_THEME['background_color'])
     login_main_frame.pack(fill="both", expand=True)
     
-    # Login form
-    tk.Label(login_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, sticky="e", padx=(0, 10), pady=8)
-    tk.Label(login_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=8)
+    # Login form with improved visibility
+    tk.Label(login_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
+             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, sticky="e", padx=(0, 10), pady=12)
+    tk.Label(login_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
+             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=12)
 
-    login_username_entry = tk.Entry(login_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=20,
-                                   bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
-    login_password_entry = tk.Entry(login_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=20,
-                                   bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
-    login_username_entry.grid(row=0, column=1, pady=8, padx=5)
-    login_password_entry.grid(row=1, column=1, pady=8, padx=5)
+    login_username_entry = tk.Entry(login_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
+                                   bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+    login_password_entry = tk.Entry(login_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
+                                   bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+    login_username_entry.grid(row=0, column=1, pady=12, padx=10, ipady=4)
+    login_password_entry.grid(row=1, column=1, pady=12, padx=10, ipady=4)
     
     # Set focus to username entry
     login_username_entry.focus()
@@ -121,37 +121,38 @@ def show_login(callback):
     login_password_entry.bind('<Return>', on_login_enter)
 
     login_btn = tk.Button(login_main_frame, text="Login", command=verify_login, 
-                         font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-                         bg=config.WINDOW_THEME['success_color'], fg="white", width=15, relief='flat')
-    login_btn.grid(row=2, column=0, columnspan=2, pady=20)
+                         font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+                         bg=config.WINDOW_THEME['success_color'], fg="white", width=15, relief='flat',
+                         cursor='hand2', activebackground='#27ae60', activeforeground='white')
+    login_btn.grid(row=2, column=0, columnspan=2, pady=20, ipady=6)
     
     # === REGISTRATION TAB ===
     register_main_frame = tk.Frame(register_frame, padx=20, pady=20, bg=config.WINDOW_THEME['background_color'])
     register_main_frame.pack(fill="both", expand=True)
     
-    # Registration form
-    tk.Label(register_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, sticky="e", padx=(0, 10), pady=8)
-    tk.Label(register_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=8)
-    tk.Label(register_main_frame, text="Confirm Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=8)
-    tk.Label(register_main_frame, text="Email (Optional):", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=3, column=0, sticky="e", padx=(0, 10), pady=8)
+    # Registration form with improved visibility
+    tk.Label(register_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
+             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
+             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Confirm Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
+             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Email (Optional):", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
+             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=3, column=0, sticky="e", padx=(0, 10), pady=10)
 
-    reg_username_entry = tk.Entry(register_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=20,
-                                 bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
-    reg_password_entry = tk.Entry(register_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=20,
-                                 bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
-    reg_confirm_entry = tk.Entry(register_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=20,
-                                bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
-    reg_email_entry = tk.Entry(register_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), width=20,
-                              bg='white', fg='black', insertbackground='black', relief='solid', bd=1)
+    reg_username_entry = tk.Entry(register_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
+                                 bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+    reg_password_entry = tk.Entry(register_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
+                                 bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+    reg_confirm_entry = tk.Entry(register_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
+                                bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+    reg_email_entry = tk.Entry(register_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
+                              bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
     
-    reg_username_entry.grid(row=0, column=1, pady=8, padx=5)
-    reg_password_entry.grid(row=1, column=1, pady=8, padx=5)
-    reg_confirm_entry.grid(row=2, column=1, pady=8, padx=5)
-    reg_email_entry.grid(row=3, column=1, pady=8, padx=5)
+    reg_username_entry.grid(row=0, column=1, pady=10, padx=10, ipady=4)
+    reg_password_entry.grid(row=1, column=1, pady=10, padx=10, ipady=4)
+    reg_confirm_entry.grid(row=2, column=1, pady=10, padx=10, ipady=4)
+    reg_email_entry.grid(row=3, column=1, pady=10, padx=10, ipady=4)
     
     def register_user():
         username = reg_username_entry.get().strip()
@@ -217,9 +218,10 @@ def show_login(callback):
     reg_email_entry.bind('<Return>', on_register_enter)
     
     register_btn = tk.Button(register_main_frame, text="Register", command=register_user, 
-                            font=(config.FONT_FAMILY, config.FONT_SIZE_NORMAL), 
-                            bg=config.WINDOW_THEME['primary_color'], fg="white", width=15, relief='flat')
-    register_btn.grid(row=4, column=0, columnspan=2, pady=20)
+                            font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+                            bg=config.WINDOW_THEME['primary_color'], fg="white", width=15, relief='flat',
+                            cursor='hand2', activebackground='#2980b9', activeforeground='white')
+    register_btn.grid(row=4, column=0, columnspan=2, pady=20, ipady=6)
     
     # Handle window close
     def on_closing():
