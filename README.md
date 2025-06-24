@@ -5,23 +5,27 @@ A comprehensive Library Management System with QR Code Integration built using P
 ## Features
 
 ### 📚 Book Management
+
 - Add new books with title, author, and ISBN
 - View all books in a searchable table format
 - Automatic QR code generation for each book
 - Book availability tracking
 
 ### 📤📥 Borrowing System
+
 - Borrow books with student name validation
 - Return books with automatic availability updates
 - Track borrowing history and dates
 - View currently borrowed books with days borrowed
 
 ### 🔐 Security
+
 - Admin login system
 - Input validation and error handling
 - Database integrity checks
 
 ### 📱 QR Code Integration
+
 - Generate QR codes for each book
 - Multiple QR code formats (basic, with logo, with text)
 - QR code validation
@@ -30,17 +34,20 @@ A comprehensive Library Management System with QR Code Integration built using P
 ## Installation
 
 ### Prerequisites
+
 - Python 3.7 or higher
 - pip (Python package installer)
 
 ### Setup
 
 1. **Clone or download the project**
+
    ```bash
    cd SMARTLIB_MANAGER
    ```
 
 2. **Install required dependencies**
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -53,30 +60,35 @@ A comprehensive Library Management System with QR Code Integration built using P
 ## Usage
 
 ### First Time Setup
+
 1. Run the application using `python main.py`
 2. Login with default credentials:
    - Username: `admin`
    - Password: `admin123`
 
 ### Adding Books
+
 1. Click "📚 Add New Book"
 2. Fill in the book details (Title is required)
 3. Click "Save Book"
 4. A QR code will be automatically generated in the `qr_codes` folder
 
 ### Borrowing Books
+
 1. Click "📤 Borrow Book"
 2. Enter student name
 3. Select an available book from the dropdown
 4. Click "Borrow Book"
 
 ### Returning Books
+
 1. Click "📥 Return Book"
 2. Enter student name
 3. Select the borrowed book from the dropdown
 4. Click "Return Book"
 
 ### Viewing Records
+
 - **View All Books**: See all books with their availability status
 - **View Borrowed Books**: See currently borrowed books with borrowing duration
 
@@ -99,6 +111,7 @@ SMARTLIB_MANAGER/
 ## Database Schema
 
 ### Books Table
+
 - `id`: Primary key (auto-increment)
 - `title`: Book title (required, unique)
 - `author`: Book author (optional)
@@ -107,6 +120,7 @@ SMARTLIB_MANAGER/
 - `date_added`: Timestamp when book was added
 
 ### Borrowed Table
+
 - `id`: Primary key (auto-increment)
 - `student_name`: Name of the student who borrowed the book
 - `book_title`: Title of the borrowed book
@@ -144,16 +158,19 @@ The application can be customized by modifying `config.py`:
 ### Common Issues
 
 1. **"No module named 'PIL'" error**
+
    ```bash
    pip install Pillow
    ```
 
 2. **"No module named 'qrcode'" error**
+
    ```bash
    pip install qrcode
    ```
 
 3. **Database errors**
+
    - Delete `library.db` file and restart the application
    - The database will be recreated automatically
 
@@ -184,6 +201,7 @@ This project is open source and available under the MIT License.
 ## Support
 
 For support or questions:
+
 1. Check the troubleshooting section above
 2. Review the code comments for implementation details
 3. Create an issue in the project repository
