@@ -109,10 +109,10 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('generate_qr', book_title=book[1]) }}" 
-                                           class="btn btn-sm btn-outline-info" target="_blank">
+                                        <button onclick="showQRCode('{{ book[1] }}')" 
+                                                class="btn btn-sm btn-outline-info">
                                             <i class="fas fa-qrcode"></i> View QR
-                                        </a>
+                                        </button>
                                     </td>
                                     <td>
                                         {% if not book.is_borrowed %}
@@ -172,10 +172,10 @@
                                 </div>
                                 <div class="card-footer bg-transparent">
                                     <div class="btn-group w-100" role="group">
-                                        <a href="{{ url_for('generate_qr', book_title=book[1]) }}" 
-                                           class="btn btn-sm btn-outline-info" target="_blank">
+                                        <button onclick="showQRCode('{{ book[1] }}')" 
+                                                class="btn btn-sm btn-outline-info">
                                             <i class="fas fa-qrcode"></i>
-                                        </a>
+                                        </button>
                                         {% if not book.is_borrowed %}
                                             <a href="{{ url_for('borrow') }}?book={{ book.title }}" 
                                                class="btn btn-sm btn-success">
@@ -200,6 +200,44 @@
         </div>
     </div>
 </div>
+<!-- QR Code Modal -->
+<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qrModalLabel">
+                    <i class="fas fa-qrcode"></i> QR Code for Book
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <div id="qrCodeContainer">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Generating QR Code...</p>
+                </div>
+                <div id="qrCodeImage" style="display: none;">
+                    <img id="qrImage" src="" alt="QR Code" class="img-fluid" style="max-width: 300px;">
+                    <p class="mt-3 text-muted" id="bookTitle"></p>
+                </div>
+                <div id="qrCodeError" style="display: none;">
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to generate QR code. Please try again.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="downloadQRCode()" id="downloadBtn" style="display: none;">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -214,6 +252,65 @@ function toggleView(view) {
     } else {
         tableView.style.display = 'none';
         gridView.style.display = 'block';
+    }
+}
+
+function showQRCode(bookTitle) {
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+    modal.show();
+    
+    // Reset modal content
+    document.getElementById('qrCodeContainer').style.display = 'block';
+    document.getElementById('qrCodeImage').style.display = 'none';
+    document.getElementById('qrCodeError').style.display = 'none';
+    document.getElementById('downloadBtn').style.display = 'none';
+    
+    // Update modal title
+    document.getElementById('qrModalLabel').innerHTML = `<i class="fas fa-qrcode"></i> QR Code for "${bookTitle}"`;
+    
+    // Fetch QR code
+    fetch(`/generate_qr/${encodeURIComponent(bookTitle)}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.qr_code) {
+                // Hide loading spinner
+                document.getElementById('qrCodeContainer').style.display = 'none';
+                
+                // Show QR code image
+                const qrImage = document.getElementById('qrImage');
+                qrImage.src = `data:image/png;base64,${data.qr_code}`;
+                document.getElementById('bookTitle').textContent = `Book: ${bookTitle}`;
+                document.getElementById('qrCodeImage').style.display = 'block';
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                
+                // Store for download
+                window.currentQRData = data.qr_code;
+                window.currentBookTitle = bookTitle;
+            } else {
+                throw new Error('No QR code data received');
+            }
+        })
+        .catch(error => {
+            console.error('Error generating QR code:', error);
+            document.getElementById('qrCodeContainer').style.display = 'none';
+            document.getElementById('qrCodeError').style.display = 'block';
+        });
+}
+
+function downloadQRCode() {
+    if (window.currentQRData && window.currentBookTitle) {
+        const link = document.createElement('a');
+        link.href = `data:image/png;base64,${window.currentQRData}`;
+        link.download = `${window.currentBookTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qr.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }
 </script>
