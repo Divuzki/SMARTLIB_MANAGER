@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 import sqlite3
 import os
 from datetime import datetime
@@ -203,9 +203,20 @@ def add_book():
         title = request.form['title']
         author = request.form.get('author', '')
         isbn = request.form.get('isbn', '')
+        description = request.form.get('description', '')
+        category = request.form.get('category', '')
+        publication_year = request.form.get('publication_year', '')
         
         if not title:
             flash('Book title is required', 'error')
+            return render_template('add_book.html')
+        
+        if not author:
+            flash('Author is required', 'error')
+            return render_template('add_book.html')
+            
+        if not isbn:
+            flash('ISBN is required', 'error')
             return render_template('add_book.html')
         
         try:
@@ -220,6 +231,8 @@ def add_book():
             return redirect(url_for('books'))
         except sqlite3.IntegrityError:
             flash('A book with this title already exists', 'error')
+        except Exception as e:
+            flash(f'Error adding book: {str(e)}', 'error')
     
     return render_template('add_book.html')
 
@@ -318,7 +331,7 @@ def borrowed_books():
 
 @app.route('/generate_qr/<book_title>')
 @login_required
-def generate_qr_code(book_title):
+def generate_qr(book_title):
     # Generate QR code
     qr = qrcode.QRCode(version=1, box_size=10, border=5)
     qr.add_data(f"Book: {book_title}")
