@@ -109,7 +109,7 @@
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <a href="{{ url_for('generate_qr', book_id=book.id) }}" 
+                                        <a href="{{ url_for('generate_qr', book_title=book[1]) }}" 
                                            class="btn btn-sm btn-outline-info" target="_blank">
                                             <i class="fas fa-qrcode"></i> View QR
                                         </a>
@@ -172,7 +172,7 @@
                                 </div>
                                 <div class="card-footer bg-transparent">
                                     <div class="btn-group w-100" role="group">
-                                        <a href="{{ url_for('generate_qr', book_id=book.id) }}" 
+                                        <a href="{{ url_for('generate_qr', book_title=book[1]) }}" 
                                            class="btn btn-sm btn-outline-info" target="_blank">
                                             <i class="fas fa-qrcode"></i>
                                         </a>
