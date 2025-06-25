@@ -1,52 +1,95 @@
-# SMARTLIB MANAGER
+# SmartLib Manager - Web Application
 
-A comprehensive Library Management System with QR Code Integration built using Python and Tkinter.
+A modern, web-based library management system built with Flask. This application allows you to manage books, track borrowings, generate QR codes, and maintain user accounts through an intuitive web interface.
+
+*Note: This is the web version of SmartLib Manager. The original Tkinter version files are still available in the same directory.*
 
 ## Features
 
 ### 📚 Book Management
-
-- Add new books with title, author, and ISBN
-- View all books in a searchable table format
-- Automatic QR code generation for each book
-- Book availability tracking
-
-### 📤📥 Borrowing System
-
-- Borrow books with student name validation
-- Return books with automatic availability updates
-- Track borrowing history and dates
-- View currently borrowed books with days borrowed
-
-### 🔐 Security
-
-- Admin login system
-- Input validation and error handling
-- Database integrity checks
-
-### 📱 QR Code Integration
-
+- Add new books with detailed information (title, author, ISBN, category, etc.)
+- View all books in table or grid format
+- Search and filter books by various criteria
 - Generate QR codes for each book
-- Multiple QR code formats (basic, with logo, with text)
-- QR code validation
-- Organized QR code storage
+- Track book availability status
+
+### 👥 User Management
+- User registration and authentication
+- Secure login system with session management
+- Default admin account for initial setup
+
+### 📋 Borrowing System
+- Issue books to students
+- Track borrowed books with due dates
+- Return books functionality
+- Overdue book notifications
+- Borrowing history and statistics
+
+### 📊 Dashboard & Analytics
+- Real-time library statistics
+- Recent activity tracking
+- Quick action buttons
+- System status information
+
+### 🎨 Modern UI/UX
+- Responsive Bootstrap-based design
+- Mobile-friendly interface
+- Intuitive navigation
+- Professional styling with gradients and animations
+
+### 🔐 Security Features
+- Password hashing using SHA-256
+- Session-based authentication
+- CSRF protection through Flask sessions
+- Input validation and sanitization
 
 ## Installation
 
 ### Prerequisites
-
 - Python 3.7 or higher
 - pip (Python package installer)
 
-### Setup
+### Setup Instructions
 
-1. **Clone or download the project**
-
+1. **Navigate to the project directory:**
    ```bash
    cd SMARTLIB_MANAGER
    ```
 
-2. **Install required dependencies**
+2. **Install required dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the web application:**
+   ```bash
+   python app.py
+   ```
+
+4. **Access the application:**
+   Open your web browser and navigate to: `http://localhost:5000`
+
+## Default Login Credentials
+
+**Admin Account:**
+- Username: `admin`
+- Password: `admin123`
+
+*Note: Please change the default password after first login for security.*
+
+## Quick Start Guide
+
+1. Start the application using `python app.py`
+2. Open your browser and go to `http://localhost:5000`
+3. Login with the default admin credentials
+4. Start adding books and managing your library!
+
+## Legacy Tkinter Version
+
+The original Tkinter desktop version is still available in the same directory:
+- Run `python main.py` for the desktop version
+- All original features are preserved
+- Database is compatible between both versions
 
    ```bash
    pip install -r requirements.txt

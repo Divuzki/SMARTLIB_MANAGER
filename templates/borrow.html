@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Borrow Book - SmartLib Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-6 mb-0">
+            <i class="fas fa-hand-holding"></i> Borrow Book
+        </h1>
+        <p class="text-muted">Issue a book to a student</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Borrowing Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="borrowForm">
+                    <div class="mb-3">
+                        <label for="student_name" class="form-label">
+                            <i class="fas fa-user-graduate"></i> Student Name *
+                        </label>
+                        <input type="text" class="form-control" id="student_name" name="student_name" required 
+                               placeholder="Enter student's full name" list="student_suggestions">
+                        <datalist id="student_suggestions">
+                            {% for student in recent_students %}
+                            <option value="{{ student }}">
+                            {% endfor %}
+                        </datalist>
+                        <div class="form-text">
+                            Enter the full name of the student borrowing the book
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="student_id" class="form-label">
+                            <i class="fas fa-id-card"></i> Student ID (Optional)
+                        </label>
+                        <input type="text" class="form-control" id="student_id" name="student_id" 
+                               placeholder="Enter student ID or roll number">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="book_title" class="form-label">
+                            <i class="fas fa-book"></i> Select Book *
+                        </label>
+                        <select class="form-select" id="book_title" name="book_title" required>
+                            <option value="">Choose a book to borrow</option>
+                            {% for book in available_books %}
+                            <option value="{{ book.title }}" 
+                                    data-author="{{ book.author }}" 
+                                    data-isbn="{{ book.isbn }}"
+                                    {{ 'selected' if request.args.get('book') == book.title }}>
+                                {{ book.title }} - {{ book.author }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        <div class="form-text">
+                            Only available books are shown in the list
+                        </div>
+                    </div>
+                    
+                    <!-- Book Details Display -->
+                    <div id="book_details" class="mb-3" style="display: none;">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title">Selected Book Details</h6>
+                                <p class="card-text mb-1"><strong>Title:</strong> <span id="selected_title"></span></p>
+                                <p class="card-text mb-1"><strong>Author:</strong> <span id="selected_author"></span></p>
+                                <p class="card-text mb-0"><strong>ISBN:</strong> <span id="selected_isbn"></span></p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="borrow_date" class="form-label">
+                            <i class="fas fa-calendar"></i> Borrow Date *
+                        </label>
+                        <input type="date" class="form-control" id="borrow_date" name="borrow_date" required>
+                        <div class="form-text">
+                            Default is today's date
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="due_date" class="form-label">
+                            <i class="fas fa-calendar-check"></i> Due Date *
+                        </label>
+                        <input type="date" class="form-control" id="due_date" name="due_date" required>
+                        <div class="form-text">
+                            Default is 14 days from borrow date
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="notes" class="form-label">
+                            <i class="fas fa-sticky-note"></i> Notes (Optional)
+                        </label>
+                        <textarea class="form-control" id="notes" name="notes" rows="2" 
+                                  placeholder="Any additional notes or comments"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fas fa-hand-holding"></i> Issue Book
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <a href="{{ url_for('books') }}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-chart-bar"></i> Library Statistics</h6>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-4">
+                        <div class="h4 text-primary">{{ available_books|length }}</div>
+                        <small class="text-muted">Available Books</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="h4 text-warning">{{ borrowed_count }}</div>
+                        <small class="text-muted">Currently Borrowed</small>
+                    </div>
+                    <div class="col-4">
+                        <div class="h4 text-info">{{ total_books }}</div>
+                        <small class="text-muted">Total Books</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Set default dates
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date();
+    const borrowDate = document.getElementById('borrow_date');
+    const dueDate = document.getElementById('due_date');
+    
+    // Set borrow date to today
+    borrowDate.value = today.toISOString().split('T')[0];
+    
+    // Set due date to 14 days from today
+    const due = new Date(today);
+    due.setDate(due.getDate() + 14);
+    dueDate.value = due.toISOString().split('T')[0];
+    
+    // Update due date when borrow date changes
+    borrowDate.addEventListener('change', function() {
+        const borrowDateValue = new Date(this.value);
+        const newDueDate = new Date(borrowDateValue);
+        newDueDate.setDate(newDueDate.getDate() + 14);
+        dueDate.value = newDueDate.toISOString().split('T')[0];
+    });
+});
+
+// Show book details when book is selected
+document.getElementById('book_title').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
+    const bookDetails = document.getElementById('book_details');
+    
+    if (selectedOption.value) {
+        document.getElementById('selected_title').textContent = selectedOption.value;
+        document.getElementById('selected_author').textContent = selectedOption.dataset.author;
+        document.getElementById('selected_isbn').textContent = selectedOption.dataset.isbn;
+        bookDetails.style.display = 'block';
+    } else {
+        bookDetails.style.display = 'none';
+    }
+});
+
+// Auto-capitalize student name
+document.getElementById('student_name').addEventListener('input', function() {
+    this.value = this.value.replace(/\b\w/g, l => l.toUpperCase());
+});
+
+// Form validation
+document.getElementById('borrowForm').addEventListener('submit', function(e) {
+    const studentName = document.getElementById('student_name').value.trim();
+    const bookTitle = document.getElementById('book_title').value;
+    const borrowDate = new Date(document.getElementById('borrow_date').value);
+    const dueDate = new Date(document.getElementById('due_date').value);
+    
+    if (!studentName || !bookTitle) {
+        e.preventDefault();
+        alert('Please fill in all required fields.');
+        return;
+    }
+    
+    if (dueDate <= borrowDate) {
+        e.preventDefault();
+        alert('Due date must be after the borrow date.');
+        return;
+    }
+    
+    if (borrowDate > new Date()) {
+        if (!confirm('Borrow date is in the future. Continue?')) {
+            e.preventDefault();
+            return;
+        }
+    }
+});
+
+// Pre-select book if passed in URL
+window.addEventListener('load', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const bookParam = urlParams.get('book');
+    if (bookParam) {
+        const bookSelect = document.getElementById('book_title');
+        bookSelect.value = bookParam;
+        bookSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+{% endblock %}

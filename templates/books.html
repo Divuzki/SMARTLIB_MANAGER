@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}Books - SmartLib Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="display-6 mb-0">
+            <i class="fas fa-book"></i> Library Books
+        </h1>
+        <p class="text-muted">Manage and browse your book collection</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('add_book') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Book
+        </a>
+    </div>
+</div>
+
+<!-- Search and Filter -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">Search Books</label>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               placeholder="Search by title, author, or ISBN" value="{{ request.args.get('search', '') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">All Books</option>
+                            <option value="available" {{ 'selected' if request.args.get('status') == 'available' }}>Available</option>
+                            <option value="borrowed" {{ 'selected' if request.args.get('status') == 'borrowed' }}>Borrowed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sort" class="form-label">Sort By</label>
+                        <select class="form-select" id="sort" name="sort">
+                            <option value="title" {{ 'selected' if request.args.get('sort') == 'title' }}>Title</option>
+                            <option value="author" {{ 'selected' if request.args.get('sort') == 'author' }}>Author</option>
+                            <option value="isbn" {{ 'selected' if request.args.get('sort') == 'isbn' }}>ISBN</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Books Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Book Collection ({{ books|length }} books)</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('table')">
+                        <i class="fas fa-table"></i> Table
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="toggleView('grid')">
+                        <i class="fas fa-th"></i> Grid
+                    </button>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <!-- Table View -->
+                <div id="table-view">
+                    {% if books %}
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>ISBN</th>
+                                    <th>Status</th>
+                                    <th>QR Code</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for book in books %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ book.title }}</strong>
+                                    </td>
+                                    <td>{{ book.author }}</td>
+                                    <td><code>{{ book.isbn }}</code></td>
+                                    <td>
+                                        {% if book.is_borrowed %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i> Borrowed
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Available
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('generate_qr', book_id=book.id) }}" 
+                                           class="btn btn-sm btn-outline-info" target="_blank">
+                                            <i class="fas fa-qrcode"></i> View QR
+                                        </a>
+                                    </td>
+                                    <td>
+                                        {% if not book.is_borrowed %}
+                                            <a href="{{ url_for('borrow') }}?book={{ book.title }}" 
+                                               class="btn btn-sm btn-success">
+                                                <i class="fas fa-hand-holding"></i> Borrow
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('return_book', book_id=book.id) }}" 
+                                               class="btn btn-sm btn-warning"
+                                               onclick="return confirm('Return this book?')">
+                                                <i class="fas fa-undo"></i> Return
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No books found</h5>
+                        <p class="text-muted">Start by adding some books to your library.</p>
+                        <a href="{{ url_for('add_book') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Your First Book
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Grid View -->
+                <div id="grid-view" style="display: none;">
+                    {% if books %}
+                    <div class="row p-3">
+                        {% for book in books %}
+                        <div class="col-md-4 col-lg-3 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ book.title }}</h6>
+                                    <p class="card-text">
+                                        <small class="text-muted">by {{ book.author }}</small><br>
+                                        <code>{{ book.isbn }}</code>
+                                    </p>
+                                    <div class="mb-2">
+                                        {% if book.is_borrowed %}
+                                            <span class="badge bg-warning">
+                                                <i class="fas fa-clock"></i> Borrowed
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-success">
+                                                <i class="fas fa-check"></i> Available
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ url_for('generate_qr', book_id=book.id) }}" 
+                                           class="btn btn-sm btn-outline-info" target="_blank">
+                                            <i class="fas fa-qrcode"></i>
+                                        </a>
+                                        {% if not book.is_borrowed %}
+                                            <a href="{{ url_for('borrow') }}?book={{ book.title }}" 
+                                               class="btn btn-sm btn-success">
+                                                <i class="fas fa-hand-holding"></i> Borrow
+                                            </a>
+                                        {% else %}
+                                            <a href="{{ url_for('return_book', book_id=book.id) }}" 
+                                               class="btn btn-sm btn-warning"
+                                               onclick="return confirm('Return this book?')">
+                                                <i class="fas fa-undo"></i> Return
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleView(view) {
+    const tableView = document.getElementById('table-view');
+    const gridView = document.getElementById('grid-view');
+    
+    if (view === 'table') {
+        tableView.style.display = 'block';
+        gridView.style.display = 'none';
+    } else {
+        tableView.style.display = 'none';
+        gridView.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,272 @@
+{% extends "base.html" %}
+
+{% block title %}Borrowed Books - SmartLib Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1 class="display-6 mb-0">
+            <i class="fas fa-clock"></i> Borrowed Books
+        </h1>
+        <p class="text-muted">Track and manage currently borrowed books</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{{ url_for('borrow') }}" class="btn btn-success">
+            <i class="fas fa-hand-holding"></i> Borrow New Book
+        </a>
+    </div>
+</div>
+
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #FF9800, #F57C00);">
+            <div class="stats-number">{{ borrowed_books|length }}</div>
+            <div><i class="fas fa-clock"></i> Total Borrowed</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #F44336, #D32F2F);">
+            <div class="stats-number">{{ overdue_count }}</div>
+            <div><i class="fas fa-exclamation-triangle"></i> Overdue</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #FF5722, #E64A19);">
+            <div class="stats-number">{{ due_soon_count }}</div>
+            <div><i class="fas fa-clock"></i> Due Soon</div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="stats-card" style="background: linear-gradient(135deg, #4CAF50, #388E3C);">
+            <div class="stats-number">{{ on_time_count }}</div>
+            <div><i class="fas fa-check"></i> On Time</div>
+        </div>
+    </div>
+</div>
+
+<!-- Search and Filter -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="search" class="form-label">Search</label>
+                        <input type="text" class="form-control" id="search" name="search" 
+                               placeholder="Search by student name or book title" value="{{ request.args.get('search', '') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-select" id="status" name="status">
+                            <option value="">All Books</option>
+                            <option value="overdue" {{ 'selected' if request.args.get('status') == 'overdue' }}>Overdue</option>
+                            <option value="due_soon" {{ 'selected' if request.args.get('status') == 'due_soon' }}>Due Soon</option>
+                            <option value="on_time" {{ 'selected' if request.args.get('status') == 'on_time' }}>On Time</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="sort" class="form-label">Sort By</label>
+                        <select class="form-select" id="sort" name="sort">
+                            <option value="due_date" {{ 'selected' if request.args.get('sort') == 'due_date' }}>Due Date</option>
+                            <option value="borrow_date" {{ 'selected' if request.args.get('sort') == 'borrow_date' }}>Borrow Date</option>
+                            <option value="student_name" {{ 'selected' if request.args.get('sort') == 'student_name' }}>Student Name</option>
+                            <option value="book_title" {{ 'selected' if request.args.get('sort') == 'book_title' }}>Book Title</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-outline-primary">
+                                <i class="fas fa-search"></i> Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Borrowed Books Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Currently Borrowed Books ({{ borrowed_books|length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if borrowed_books %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Book</th>
+                                <th>Author</th>
+                                <th>Borrow Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Days</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for borrowing in borrowed_books %}
+                            <tr class="{% if borrowing.is_overdue %}table-danger{% elif borrowing.is_due_soon %}table-warning{% endif %}">
+                                <td>
+                                    <div>
+                                        <strong>{{ borrowing.student_name }}</strong>
+                                        {% if borrowing.student_id %}
+                                            <br><small class="text-muted">ID: {{ borrowing.student_id }}</small>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <strong>{{ borrowing.book_title }}</strong>
+                                    {% if borrowing.notes %}
+                                        <br><small class="text-muted">{{ borrowing.notes }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>{{ borrowing.author }}</td>
+                                <td>
+                                    <small>{{ borrowing.borrow_date.strftime('%Y-%m-%d') }}</small>
+                                </td>
+                                <td>
+                                    <small>{{ borrowing.due_date.strftime('%Y-%m-%d') }}</small>
+                                </td>
+                                <td>
+                                    {% if borrowing.is_overdue %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-exclamation-triangle"></i> Overdue
+                                        </span>
+                                    {% elif borrowing.is_due_soon %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock"></i> Due Soon
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check"></i> On Time
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if borrowing.is_overdue %}
+                                        <span class="text-danger fw-bold">{{ borrowing.days_overdue }} overdue</span>
+                                    {% else %}
+                                        <span class="text-muted">{{ borrowing.days_remaining }} left</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ url_for('return_book', book_id=borrowing.book_id) }}" 
+                                           class="btn btn-sm btn-success"
+                                           onclick="return confirm('Return book: {{ borrowing.book_title }}?')">
+                                            <i class="fas fa-undo"></i> Return
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-info" 
+                                                onclick="showBorrowingDetails({{ borrowing.id|tojson }})">
+                                            <i class="fas fa-info"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-clock fa-3x text-muted mb-3"></i>
+                    <h5 class="text-muted">No books currently borrowed</h5>
+                    <p class="text-muted">All books are available in the library.</p>
+                    <a href="{{ url_for('borrow') }}" class="btn btn-success">
+                        <i class="fas fa-hand-holding"></i> Borrow a Book
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Borrowing Details Modal -->
+<div class="modal fade" id="borrowingDetailsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-info-circle"></i> Borrowing Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="borrowingDetailsContent">
+                <!-- Content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showBorrowingDetails(borrowingId) {
+    // In a real application, you would fetch details via AJAX
+    // For now, we'll show a placeholder
+    const modal = new bootstrap.Modal(document.getElementById('borrowingDetailsModal'));
+    document.getElementById('borrowingDetailsContent').innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Loading borrowing details...</p>
+        </div>
+    `;
+    modal.show();
+    
+    // Simulate loading
+    setTimeout(() => {
+        document.getElementById('borrowingDetailsContent').innerHTML = `
+            <div class="alert alert-info">
+                <strong>Note:</strong> Detailed borrowing history and additional information would be displayed here in a full implementation.
+            </div>
+            <p><strong>Borrowing ID:</strong> ${borrowingId}</p>
+            <p><strong>Additional Features:</strong></p>
+            <ul>
+                <li>Complete borrowing history</li>
+                <li>Renewal options</li>
+                <li>Fine calculations</li>
+                <li>Contact information</li>
+            </ul>
+        `;
+    }, 1000);
+}
+
+// Auto-refresh page every 5 minutes to update overdue status
+setInterval(() => {
+    if (document.visibilityState === 'visible') {
+        window.location.reload();
+    }
+}, 300000); // 5 minutes
+
+// Highlight overdue books
+document.addEventListener('DOMContentLoaded', function() {
+    const overdueRows = document.querySelectorAll('.table-danger');
+    overdueRows.forEach(row => {
+        row.style.animation = 'pulse 2s infinite';
+    });
+});
+
+// Add CSS animation for overdue books
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes pulse {
+        0% { background-color: #f8d7da; }
+        50% { background-color: #f5c6cb; }
+        100% { background-color: #f8d7da; }
+    }
+`;
+document.head.appendChild(style);
+</script>
+{% endblock %}

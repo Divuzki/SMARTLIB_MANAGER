@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Add Book - SmartLib Manager{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-6 mb-0">
+            <i class="fas fa-plus"></i> Add New Book
+        </h1>
+        <p class="text-muted">Add a new book to your library collection</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-book"></i> Book Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" id="addBookForm">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">
+                            <i class="fas fa-heading"></i> Book Title *
+                        </label>
+                        <input type="text" class="form-control" id="title" name="title" required 
+                               placeholder="Enter the book title">
+                        <div class="invalid-feedback">
+                            Please provide a valid book title.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="author" class="form-label">
+                            <i class="fas fa-user-edit"></i> Author *
+                        </label>
+                        <input type="text" class="form-control" id="author" name="author" required 
+                               placeholder="Enter the author's name">
+                        <div class="invalid-feedback">
+                            Please provide a valid author name.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="isbn" class="form-label">
+                            <i class="fas fa-barcode"></i> ISBN *
+                        </label>
+                        <input type="text" class="form-control" id="isbn" name="isbn" required 
+                               placeholder="Enter the ISBN (e.g., 978-0123456789)"
+                               pattern="^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$">
+                        <div class="form-text">
+                            Enter a valid ISBN-10 or ISBN-13 format
+                        </div>
+                        <div class="invalid-feedback">
+                            Please provide a valid ISBN format.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">
+                            <i class="fas fa-align-left"></i> Description (Optional)
+                        </label>
+                        <textarea class="form-control" id="description" name="description" rows="3" 
+                                  placeholder="Enter a brief description of the book"></textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="category" class="form-label">
+                            <i class="fas fa-tags"></i> Category (Optional)
+                        </label>
+                        <select class="form-select" id="category" name="category">
+                            <option value="">Select a category</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Science">Science</option>
+                            <option value="Technology">Technology</option>
+                            <option value="History">History</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Education">Education</option>
+                            <option value="Reference">Reference</option>
+                            <option value="Children">Children's Books</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="publication_year" class="form-label">
+                            <i class="fas fa-calendar"></i> Publication Year (Optional)
+                        </label>
+                        <input type="number" class="form-control" id="publication_year" name="publication_year" 
+                               min="1000" max="2024" placeholder="e.g., 2023">
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-plus"></i> Add Book
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-grid">
+                                <a href="{{ url_for('books') }}" class="btn btn-outline-secondary btn-lg">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Quick Add Section -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <button type="button" class="btn btn-outline-info w-100" onclick="clearForm()">
+                            <i class="fas fa-eraser"></i> Clear Form
+                        </button>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                        <button type="button" class="btn btn-outline-success w-100" onclick="fillSampleData()">
+                            <i class="fas fa-magic"></i> Fill Sample Data
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Form validation
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+
+// Clear form function
+function clearForm() {
+    document.getElementById('addBookForm').reset();
+    document.getElementById('addBookForm').classList.remove('was-validated');
+}
+
+// Fill sample data function
+function fillSampleData() {
+    document.getElementById('title').value = 'The Great Gatsby';
+    document.getElementById('author').value = 'F. Scott Fitzgerald';
+    document.getElementById('isbn').value = '978-0-7432-7356-5';
+    document.getElementById('description').value = 'A classic American novel set in the Jazz Age.';
+    document.getElementById('category').value = 'Fiction';
+    document.getElementById('publication_year').value = '1925';
+}
+
+// ISBN validation
+document.getElementById('isbn').addEventListener('input', function() {
+    const isbn = this.value.replace(/[^0-9X]/g, '');
+    if (isbn.length === 10 || isbn.length === 13) {
+        this.classList.remove('is-invalid');
+        this.classList.add('is-valid');
+    } else {
+        this.classList.remove('is-valid');
+        this.classList.add('is-invalid');
+    }
+});
+
+// Auto-format ISBN
+document.getElementById('isbn').addEventListener('blur', function() {
+    let isbn = this.value.replace(/[^0-9X]/g, '');
+    if (isbn.length === 10) {
+        // Format ISBN-10
+        this.value = isbn.replace(/(\d{1})(\d{3})(\d{5})(\d{1})/, '$1-$2-$3-$4');
+    } else if (isbn.length === 13) {
+        // Format ISBN-13
+        this.value = isbn.replace(/(\d{3})(\d{1})(\d{3})(\d{5})(\d{1})/, '$1-$2-$3-$4-$5');
+    }
+});
+</script>
+{% endblock %}
