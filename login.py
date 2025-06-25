@@ -62,15 +62,15 @@ def show_login(callback):
     login_main_frame.pack(fill="both", expand=True)
     
     # Login form with improved visibility
-    tk.Label(login_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, sticky="e", padx=(0, 10), pady=12)
-    tk.Label(login_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=12)
+    tk.Label(login_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+             bg=config.WINDOW_THEME['background_color'], fg='#1565C0').grid(row=0, column=0, sticky="e", padx=(0, 10), pady=12)
+    tk.Label(login_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+             bg=config.WINDOW_THEME['background_color'], fg='#1565C0').grid(row=1, column=0, sticky="e", padx=(0, 10), pady=12)
 
     login_username_entry = tk.Entry(login_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
-                                   bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+                                   bg='#F8F9FA', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=2, highlightcolor=config.WINDOW_THEME['primary_color'], highlightbackground='#E3F2FD')
     login_password_entry = tk.Entry(login_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
-                                   bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+                                   bg='#F8F9FA', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=2, highlightcolor=config.WINDOW_THEME['primary_color'], highlightbackground='#E3F2FD')
     login_username_entry.grid(row=0, column=1, pady=12, padx=10, ipady=4)
     login_password_entry.grid(row=1, column=1, pady=12, padx=10, ipady=4)
     
@@ -131,23 +131,23 @@ def show_login(callback):
     register_main_frame.pack(fill="both", expand=True)
     
     # Registration form with improved visibility
-    tk.Label(register_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=0, column=0, sticky="e", padx=(0, 10), pady=10)
-    tk.Label(register_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=1, column=0, sticky="e", padx=(0, 10), pady=10)
-    tk.Label(register_main_frame, text="Confirm Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=2, column=0, sticky="e", padx=(0, 10), pady=10)
-    tk.Label(register_main_frame, text="Email (Optional):", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), 
-             bg=config.WINDOW_THEME['background_color'], fg=config.WINDOW_THEME['text_color']).grid(row=3, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Username:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+             bg=config.WINDOW_THEME['background_color'], fg='#1565C0').grid(row=0, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+             bg=config.WINDOW_THEME['background_color'], fg='#1565C0').grid(row=1, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Confirm Password:", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+             bg=config.WINDOW_THEME['background_color'], fg='#1565C0').grid(row=2, column=0, sticky="e", padx=(0, 10), pady=10)
+    tk.Label(register_main_frame, text="Email (Optional):", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM, 'bold'), 
+             bg=config.WINDOW_THEME['background_color'], fg='#1565C0').grid(row=3, column=0, sticky="e", padx=(0, 10), pady=10)
 
     reg_username_entry = tk.Entry(register_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
-                                 bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+                                 bg='#F8F9FA', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=2, highlightcolor=config.WINDOW_THEME['primary_color'], highlightbackground='#E3F2FD')
     reg_password_entry = tk.Entry(register_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
-                                 bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+                                 bg='#F8F9FA', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=2, highlightcolor=config.WINDOW_THEME['primary_color'], highlightbackground='#E3F2FD')
     reg_confirm_entry = tk.Entry(register_main_frame, show="*", font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
-                                bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+                                bg='#F8F9FA', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=2, highlightcolor=config.WINDOW_THEME['primary_color'], highlightbackground='#E3F2FD')
     reg_email_entry = tk.Entry(register_main_frame, font=(config.FONT_FAMILY, config.FONT_SIZE_MEDIUM), width=18,
-                              bg='white', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=1, highlightcolor=config.WINDOW_THEME['primary_color'])
+                              bg='#F8F9FA', fg='black', insertbackground='black', relief='solid', bd=2, highlightthickness=2, highlightcolor=config.WINDOW_THEME['primary_color'], highlightbackground='#E3F2FD')
     
     reg_username_entry.grid(row=0, column=1, pady=10, padx=10, ipady=4)
     reg_password_entry.grid(row=1, column=1, pady=10, padx=10, ipady=4)

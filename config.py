@@ -20,14 +20,14 @@ APP_DESCRIPTION = "Library Management System with QR Code Integration"
 
 # UI Configuration
 WINDOW_THEME = {
-    'primary_color': '#3498db',
-    'success_color': '#2ecc71',
-    'warning_color': '#f39c12',
-    'danger_color': '#e74c3c',
-    'secondary_color': '#95a5a6',
-    'background_color': '#f0f0f0',
-    'text_color': '#2c3e50',
-    'subtitle_color': '#7f8c8d'
+    'primary_color': '#2196F3',
+    'success_color': '#1976D2',
+    'warning_color': '#FF9800',
+    'danger_color': '#F44336',
+    'secondary_color': '#90CAF9',
+    'background_color': '#FFFFFF',
+    'text_color': '#1565C0',
+    'subtitle_color': '#42A5F5'
 }
 
 # Font Configuration
